@@ -19,6 +19,6 @@ jobs:
           group: cloudwatch-logs-actions-example
           stream: ${{ github.sha }}
           run: |
-            echo "hello world"
-            echo -e "foo\nbar\nbaz"
+            echo 'hello world'
+            echo -e 'foo\nbar\nbaz'
             curl http://api.ipify.org/ --verbose
