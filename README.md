@@ -40,7 +40,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           group: my-open-project
-          stream: {{ gihub.sha }}
+          stream: ${{ gihub.sha }}
           run: |
             npm run deploy:prod
 ```

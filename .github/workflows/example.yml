@@ -17,6 +17,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         with:
           group: cloudwatch-logs-actions-example
-          stream: {{ github.sha }}
+          stream: ${{ github.sha }}
           run: |
             echo "hello world"
