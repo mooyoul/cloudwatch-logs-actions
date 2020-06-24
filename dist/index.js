@@ -4790,12 +4790,15 @@ const consumer_1 = __webpack_require__(938);
     const group = core.getInput("group");
     const stream = core.getInput("stream");
     const run = core.getInput("run");
+    const shellName = core.getInput("shell") || "sh";
+    const shell = getShell(shellName);
     const consumer = new consumer_1.CloudWatchLogsConsumer({
         region,
         group,
         stream,
     });
-    await exec_1.exec(run, undefined, {
+    await exec_1.exec(shell.program, shell.args, {
+        input: Buffer.from(run, "utf8"),
         silent: true,
         listeners: {
             stdline(line) {
@@ -4811,6 +4814,21 @@ const consumer_1 = __webpack_require__(938);
     console.error(e.stack); // tslint:disable-line
     core.setFailed(e.message);
 });
+function getShell(name) {
+    const normalizedName = name.toLowerCase();
+    switch (normalizedName) {
+        case "bash":
+            return {
+                program: "bash",
+                args: ["--noprofile", "--norc", "-eo", "pipefail"],
+            };
+        default:
+            return {
+                program: "sh",
+                args: ["-e"],
+            };
+    }
+}
 
 
 /***/ }),
