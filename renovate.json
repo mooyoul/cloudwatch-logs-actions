@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "@prescott",
+    "@prescott:semantic-commit"
+  ]
+}
