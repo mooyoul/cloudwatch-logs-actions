@@ -42,6 +42,8 @@ jobs:
           group: my-open-project
           stream: ${{ gihub.sha }}
           run: |
+            # you can use multiline commands if needed
+            npm run deploy:stage
             npm run deploy:prod
 ```
 
