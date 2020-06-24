@@ -20,5 +20,5 @@ jobs:
           stream: ${{ github.sha }}
           run: |
             echo 'hello world'
-            echo -e 'foo\nbar\nbaz'
+            ls -al
             curl http://api.ipify.org/ --verbose
