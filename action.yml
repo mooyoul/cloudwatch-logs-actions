@@ -1,0 +1,23 @@
+name: 'CloudWatch Logs Actions'
+description: 'GitHub action that integrates with Amazon CloudWatch Logs'
+author: 'MooYeol Prescott Lee'
+inputs:
+  # Common
+  region:
+    description: 'AWS Region'
+    required: false
+  group:
+    description: 'Log Group Name'
+    required: true
+  stream:
+    description: 'Log Stream Name'
+    required: true
+  run:
+    description: 'Command to run'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'activity'
+  color: 'green'
