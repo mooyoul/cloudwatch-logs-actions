@@ -8,6 +8,7 @@
 
 GitHub action that integrates with Amazon CloudWatch Logs.
 
+![Example](./assets/example.png)
 
 -----
 
