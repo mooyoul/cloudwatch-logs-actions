@@ -1,3 +1,10 @@
+## [1.1.4](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.3...v1.1.4) (2020-06-26)
+
+
+### Bug Fixes
+
+* **consumer:** ignore empty line text ([4c514ac](https://github.com/mooyoul/cloudwatch-logs-actions/commit/4c514ac23994be6f56dfc4f22433addbb4fc4f10))
+
 ## [1.1.3](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.2...v1.1.3) (2020-06-26)
 
 

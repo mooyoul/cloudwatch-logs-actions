@@ -20800,9 +20800,11 @@ class CloudWatchLogsConsumer {
         this.retentionInDays = options.retentionInDays;
     }
     async consume(line) {
-        this.queue(line);
-        if (this.shouldFlush) {
-            await this.flush();
+        if (line.length > 0) {
+            this.queue(line);
+            if (this.shouldFlush) {
+                await this.flush();
+            }
         }
     }
     async flush() {
