@@ -35,7 +35,9 @@ export class CloudWatchLogsConsumer {
   public async consume(line: string) {
     this.queue(line);
 
-    await this.flush();
+    if (this.shouldFlush) {
+      await this.flush();
+    }
   }
 
   public async flush() {
@@ -92,21 +94,19 @@ export class CloudWatchLogsConsumer {
   }
 
   private get flushable() {
-    if (this.buffer.length > 0) {
-      if (this.buffer.length > MAX_RECORDS) {
-        return true;
-      }
+    return this.buffer.length > 0;
+  }
 
-      if (this.bufferSize > MAX_SIZE) {
-        return true;
-      }
-
-      if (Date.now() - this.flushedAt > MAX_DELAY) {
-        return true;
-      }
+  private get shouldFlush() {
+    if (this.buffer.length > MAX_RECORDS) {
+      return true;
     }
 
-    return false;
+    if (this.bufferSize > MAX_SIZE) {
+      return true;
+    }
+
+    return Date.now() - this.flushedAt > MAX_DELAY;
   }
 
   private queue(line: string) {
