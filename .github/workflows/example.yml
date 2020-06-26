@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Deploy
-        uses: mooyoul/cloudwatch-logs-actions@v1.0.1
+        uses: mooyoul/cloudwatch-logs-actions@v1.0.2
         env:
           AWS_DEFAULT_REGION: us-east-1
           AWS_REGION: us-east-1
@@ -18,6 +18,8 @@ jobs:
         with:
           group: cloudwatch-logs-actions-example
           stream: ${{ github.sha }}
+          retention: 14 # 14 days
+          shell: bash
           run: |
             echo 'hello world'
             ls -al

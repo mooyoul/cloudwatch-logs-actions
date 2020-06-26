@@ -12,6 +12,9 @@ describe("cloudwatch-logs-actions", () => {
     const createLogGroupFake = sinon.fake.resolves({});
     stubAWSAPI(CloudWatchLogs, "createLogGroup", createLogGroupFake);
 
+    const putRetentionPolicyFake = sinon.fake.resolves({});
+    stubAWSAPI(CloudWatchLogs, "putRetentionPolicy", putRetentionPolicyFake);
+
     const createLogStreamFake = sinon.fake.resolves({});
     stubAWSAPI(CloudWatchLogs, "createLogStream", createLogStreamFake);
 
@@ -22,10 +25,12 @@ describe("cloudwatch-logs-actions", () => {
       region: "us-east-1",
       group: "group-name",
       stream: "stream-name",
+      retentionInDays: 7,
     });
 
     await res.consume("foo");
     expect(createLogGroupFake.callCount).toEqual(0);
+    expect(putRetentionPolicyFake.callCount).toEqual(0);
     expect(createLogStreamFake.callCount).toEqual(0);
     expect(putLogEventsFake.callCount).toEqual(0);
 
@@ -35,6 +40,12 @@ describe("cloudwatch-logs-actions", () => {
     expect(createLogGroupFake.callCount).toEqual(1);
     expect(createLogGroupFake.firstCall.args).toEqual([{
       logGroupName: "group-name",
+    }]);
+
+    expect(putRetentionPolicyFake.callCount).toEqual(1);
+    expect(putRetentionPolicyFake.firstCall.args).toEqual([{
+      logGroupName: "group-name",
+      retentionInDays: 7,
     }]);
 
     expect(createLogStreamFake.callCount).toEqual(1);
@@ -61,15 +72,9 @@ describe("cloudwatch-logs-actions", () => {
     await res.flush();
 
     expect(createLogGroupFake.callCount).toEqual(1);
-    expect(createLogGroupFake.firstCall.args).toEqual([{
-      logGroupName: "group-name",
-    }]);
-
+    expect(putRetentionPolicyFake.callCount).toEqual(1);
     expect(createLogStreamFake.callCount).toEqual(1);
-    expect(createLogStreamFake.firstCall.args).toEqual([{
-      logGroupName: "group-name",
-      logStreamName: "stream-name",
-    }]);
+
     expect(putLogEventsFake.callCount).toEqual(2);
     expect(putLogEventsFake.secondCall.args).toEqual([{
       logGroupName: "group-name",

@@ -3,6 +3,10 @@ import { exec } from "@actions/exec";
 
 import { CloudWatchLogsConsumer } from "./consumer";
 
+const ALLOWED_RETENTION_DAYS = new Set<number>([
+  1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653,
+]);
+
 type Shell = {
   program: string;
   args: string[];
@@ -12,6 +16,12 @@ type Shell = {
   const region = core.getInput("region") || process.env.AWS_REGION || "us-east-1";
   const group = core.getInput("group");
   const stream = core.getInput("stream");
+  const retentionInDays = (() => {
+    const raw = core.getInput("retention");
+    const parsed = parseInt(raw, 10);
+
+    return ALLOWED_RETENTION_DAYS.has(parsed) ? parsed : undefined;
+  })();
   const run = core.getInput("run");
   const shellName = core.getInput("shell") || "sh";
 
@@ -21,6 +31,7 @@ type Shell = {
     region,
     group,
     stream,
+    retentionInDays,
   });
 
   await exec(shell.program, shell.args, {

@@ -33,7 +33,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Deploy
-        uses: mooyoul/cloudwatch-logs-actions@v1.0.1
+        uses: mooyoul/cloudwatch-logs-actions@v1.0.2
         env:
           AWS_DEFAULT_REGION: us-east-1
           AWS_REGION: us-east-1
@@ -42,6 +42,7 @@ jobs:
         with:
           group: my-open-project
           stream: ${{ gihub.sha }}
+          retention: 14
           run: |
             # you can use multiline commands if needed
             npm run deploy:stage
@@ -52,9 +53,24 @@ jobs:
 
 ```typescript
 type Input = {
+  // Cloudwatch Logs Region
   region: string;
+
+  // Name of Log Group
   group: string;
+
+  // Name of Log Stream
   stream: string;
+
+  // The number of days to retain the log events in the specified log group.
+  // Possible values are: 1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, and 3653.
+  retention?: string;
+  
+  // Which shell to use
+  // Possible values are: sh, bash (default: sh)
+  shell?: string;
+
+  // Command to run, Supports multiple commands
   run: string;
 }
 ```

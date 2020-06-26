@@ -5,6 +5,7 @@ export type CloudWatchLogsConsumerOptions = {
   region: string;
   group: string;
   stream: string;
+  retentionInDays?: number;
 };
 
 const MAX_RECORDS = 5000;
@@ -15,6 +16,7 @@ export class CloudWatchLogsConsumer {
   private readonly cwlogs: CloudWatchLogs;
   private readonly group: string;
   private readonly stream: string;
+  private readonly retentionInDays?: number;
 
   private readonly sema = new Sema(1, { capacity: 512 });
   private flushedAt: number = Date.now();
@@ -27,6 +29,7 @@ export class CloudWatchLogsConsumer {
     this.cwlogs = new CloudWatchLogs({ region: options.region });
     this.group = options.group;
     this.stream = options.stream;
+    this.retentionInDays = options.retentionInDays;
   }
 
   public async consume(line: string) {
@@ -68,6 +71,15 @@ export class CloudWatchLogsConsumer {
         })
         .promise()
         .catch((e) => e.name === "ResourceAlreadyExistsException" ? Promise.resolve() : Promise.reject(e));
+
+      if (this.retentionInDays !== undefined) {
+        await this.cwlogs
+          .putRetentionPolicy({
+            logGroupName: this.group,
+            retentionInDays: this.retentionInDays,
+          })
+          .promise();
+      }
 
       await this.cwlogs
         .createLogStream({
