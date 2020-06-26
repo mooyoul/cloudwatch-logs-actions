@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Deploy
-        uses: mooyoul/cloudwatch-logs-actions@v1.1.3
+        uses: mooyoul/cloudwatch-logs-actions@v1.1.4
         env:
           AWS_DEFAULT_REGION: us-east-1
           AWS_REGION: us-east-1

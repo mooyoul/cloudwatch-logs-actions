@@ -33,10 +33,12 @@ export class CloudWatchLogsConsumer {
   }
 
   public async consume(line: string) {
-    this.queue(line);
+    if (line.length > 0) {
+      this.queue(line);
 
-    if (this.shouldFlush) {
-      await this.flush();
+      if (this.shouldFlush) {
+        await this.flush();
+      }
     }
   }
 

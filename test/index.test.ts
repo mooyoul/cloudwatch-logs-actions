@@ -72,6 +72,14 @@ describe("cloudwatch-logs-actions", () => {
     expect(createLogStreamFake.callCount).toEqual(1);
     expect(putLogEventsFake.callCount).toEqual(1);
 
+    await res.consume(""); // empty line
+    await res.flush();
+
+    expect(createLogGroupFake.callCount).toEqual(1);
+    expect(putRetentionPolicyFake.callCount).toEqual(1);
+    expect(createLogStreamFake.callCount).toEqual(1);
+    expect(putLogEventsFake.callCount).toEqual(1);
+
     await res.consume("bar");
 
     fakeTimer.tick(60000);
