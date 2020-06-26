@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.2...v1.1.3) (2020-06-26)
+
+
+### Bug Fixes
+
+* **runner:** fix flush cannot be called if exec throws error ([4e87cb2](https://github.com/mooyoul/cloudwatch-logs-actions/commit/4e87cb2c11e4a860635cf5ced80af70fb8b8abfb))
+
 ## [1.1.2](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.1...v1.1.2) (2020-06-26)
 
 

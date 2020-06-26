@@ -4806,19 +4806,27 @@ const ALLOWED_RETENTION_DAYS = new Set([
         stream,
         retentionInDays,
     });
-    await exec_1.exec(shell.program, shell.args, {
-        input: Buffer.from(run, "utf8"),
-        silent: true,
-        listeners: {
-            stdline(line) {
-                consumer.consume(line).catch(() => { });
+    try {
+        await exec_1.exec(shell.program, shell.args, {
+            input: Buffer.from(run, "utf8"),
+            silent: true,
+            listeners: {
+                stdline(line) {
+                    consumer.consume(line).catch(() => { });
+                },
+                errline(line) {
+                    consumer.consume(line).catch(() => { });
+                },
             },
-            errline(line) {
-                consumer.consume(line).catch(() => { });
-            },
-        },
-    });
-    await consumer.flush();
+        });
+    }
+    finally {
+        await consumer.flush()
+            .catch((e) => {
+            // tslint:disable-next-line
+            console.error("Failed to flush: ", e.stack);
+        });
+    }
 })().catch((e) => {
     console.error(e.stack); // tslint:disable-line
     core.setFailed(e.message);
