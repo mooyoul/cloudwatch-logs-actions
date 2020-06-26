@@ -20793,7 +20793,9 @@ class CloudWatchLogsConsumer {
     }
     async consume(line) {
         this.queue(line);
-        await this.flush();
+        if (this.shouldFlush) {
+            await this.flush();
+        }
     }
     async flush() {
         if (this.flushable) {
@@ -20842,18 +20844,16 @@ class CloudWatchLogsConsumer {
         }
     }
     get flushable() {
-        if (this.buffer.length > 0) {
-            if (this.buffer.length > MAX_RECORDS) {
-                return true;
-            }
-            if (this.bufferSize > MAX_SIZE) {
-                return true;
-            }
-            if (Date.now() - this.flushedAt > MAX_DELAY) {
-                return true;
-            }
+        return this.buffer.length > 0;
+    }
+    get shouldFlush() {
+        if (this.buffer.length > MAX_RECORDS) {
+            return true;
         }
-        return false;
+        if (this.bufferSize > MAX_SIZE) {
+            return true;
+        }
+        return Date.now() - this.flushedAt > MAX_DELAY;
     }
     queue(line) {
         const size = Buffer.byteLength(line) + 26;

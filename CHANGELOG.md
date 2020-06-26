@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.1...v1.1.2) (2020-06-26)
+
+
+### Bug Fixes
+
+* **flush:** fix last flush can be ignored ([f9907be](https://github.com/mooyoul/cloudwatch-logs-actions/commit/f9907be4d10c557107f451b7ce1c0aa86b34f527))
+
 ## [1.1.1](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.0...v1.1.1) (2020-06-26)
 
 
