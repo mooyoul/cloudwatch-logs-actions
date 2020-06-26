@@ -35,29 +35,29 @@ export class CloudWatchLogsConsumer {
   public async consume(line: string) {
     this.queue(line);
 
-    if (this.shouldFlush()) {
-      await this.flush();
-    }
+    await this.flush();
   }
 
   public async flush() {
-    const events = this.buffer;
-    this.buffer = [];
-    this.bufferSize = 0;
+    if (this.flushable) {
+      const events = this.buffer;
+      this.buffer = [];
+      this.bufferSize = 0;
 
-    await this.sema.acquire();
+      await this.sema.acquire();
 
-    try {
-      await this.prepareStream();
-      await this.cwlogs.putLogEvents({
-        logGroupName: this.group,
-        logStreamName: this.stream,
-        logEvents: events,
-      }).promise();
+      try {
+        await this.prepareStream();
+        await this.cwlogs.putLogEvents({
+          logGroupName: this.group,
+          logStreamName: this.stream,
+          logEvents: events,
+        }).promise();
 
-      this.flushedAt = Date.now();
-    } finally {
-      this.sema.release();
+        this.flushedAt = Date.now();
+      } finally {
+        this.sema.release();
+      }
     }
   }
 
@@ -91,7 +91,7 @@ export class CloudWatchLogsConsumer {
     }
   }
 
-  private shouldFlush() {
+  private get flushable() {
     if (this.buffer.length > 0) {
       if (this.buffer.length > MAX_RECORDS) {
         return true;
