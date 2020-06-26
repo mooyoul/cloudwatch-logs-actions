@@ -80,15 +80,21 @@ export class CloudWatchLogsConsumer {
   }
 
   private shouldFlush() {
-    if (this.buffer.length > MAX_RECORDS) {
-      return true;
+    if (this.buffer.length > 0) {
+      if (this.buffer.length > MAX_RECORDS) {
+        return true;
+      }
+
+      if (this.bufferSize > MAX_SIZE) {
+        return true;
+      }
+
+      if (Date.now() - this.flushedAt > MAX_DELAY) {
+        return true;
+      }
     }
 
-    if (this.bufferSize > MAX_SIZE) {
-      return true;
-    }
-
-    return Date.now() - this.flushedAt > MAX_DELAY;
+    return false;
   }
 
   private queue(line: string) {
