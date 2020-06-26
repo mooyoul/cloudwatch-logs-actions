@@ -21,6 +21,7 @@ export class CloudWatchLogsConsumer {
   private readonly sema = new Sema(1, { capacity: 512 });
   private flushedAt: number = Date.now();
   private initialized = false;
+  private sequenceToken?: string;
 
   private buffer: CloudWatchLogs.InputLogEvent[] = [];
   private bufferSize: number = 0;
@@ -52,13 +53,15 @@ export class CloudWatchLogsConsumer {
 
       try {
         await this.prepareStream();
-        await this.cwlogs.putLogEvents({
+        const res = await this.cwlogs.putLogEvents({
           logGroupName: this.group,
           logStreamName: this.stream,
           logEvents: events,
+          sequenceToken: this.sequenceToken,
         }).promise();
 
         this.flushedAt = Date.now();
+        this.sequenceToken = res.nextSequenceToken;
       } finally {
         this.sema.release();
       }

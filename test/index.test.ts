@@ -18,7 +18,7 @@ describe("cloudwatch-logs-actions", () => {
     const createLogStreamFake = sinon.fake.resolves({});
     stubAWSAPI(CloudWatchLogs, "createLogStream", createLogStreamFake);
 
-    const putLogEventsFake = sinon.fake.resolves({});
+    const putLogEventsFake = sinon.fake.resolves({ nextSequenceToken: "token" });
     stubAWSAPI(CloudWatchLogs, "putLogEvents", putLogEventsFake);
 
     const res = new CloudWatchLogsConsumer({
@@ -103,6 +103,7 @@ describe("cloudwatch-logs-actions", () => {
         message: "baz",
         timestamp: 121000,
       }],
+      sequenceToken: "token",
     }]);
   });
 });
