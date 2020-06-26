@@ -4785,10 +4785,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __webpack_require__(470);
 const exec_1 = __webpack_require__(986);
 const consumer_1 = __webpack_require__(938);
+const ALLOWED_RETENTION_DAYS = new Set([
+    1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 3653,
+]);
 (async () => {
     const region = core.getInput("region") || process.env.AWS_REGION || "us-east-1";
     const group = core.getInput("group");
     const stream = core.getInput("stream");
+    const retentionInDays = (() => {
+        const raw = core.getInput("retention");
+        const parsed = parseInt(raw, 10);
+        return ALLOWED_RETENTION_DAYS.has(parsed) ? parsed : undefined;
+    })();
     const run = core.getInput("run");
     const shellName = core.getInput("shell") || "sh";
     const shell = getShell(shellName);
@@ -4796,6 +4804,7 @@ const consumer_1 = __webpack_require__(938);
         region,
         group,
         stream,
+        retentionInDays,
     });
     await exec_1.exec(shell.program, shell.args, {
         input: Buffer.from(run, "utf8"),
@@ -20780,6 +20789,7 @@ class CloudWatchLogsConsumer {
         this.cwlogs = new CloudWatchLogs({ region: options.region });
         this.group = options.group;
         this.stream = options.stream;
+        this.retentionInDays = options.retentionInDays;
     }
     async consume(line) {
         this.queue(line);
@@ -20814,6 +20824,14 @@ class CloudWatchLogsConsumer {
             })
                 .promise()
                 .catch((e) => e.name === "ResourceAlreadyExistsException" ? Promise.resolve() : Promise.reject(e));
+            if (this.retentionInDays !== undefined) {
+                await this.cwlogs
+                    .putRetentionPolicy({
+                    logGroupName: this.group,
+                    retentionInDays: this.retentionInDays,
+                })
+                    .promise();
+            }
             await this.cwlogs
                 .createLogStream({
                 logGroupName: this.group,
@@ -20824,13 +20842,18 @@ class CloudWatchLogsConsumer {
         }
     }
     shouldFlush() {
-        if (this.buffer.length > MAX_RECORDS) {
-            return true;
+        if (this.buffer.length > 0) {
+            if (this.buffer.length > MAX_RECORDS) {
+                return true;
+            }
+            if (this.bufferSize > MAX_SIZE) {
+                return true;
+            }
+            if (Date.now() - this.flushedAt > MAX_DELAY) {
+                return true;
+            }
         }
-        if (this.bufferSize > MAX_SIZE) {
-            return true;
-        }
-        return Date.now() - this.flushedAt > MAX_DELAY;
+        return false;
     }
     queue(line) {
         const size = Buffer.byteLength(line) + 26;
