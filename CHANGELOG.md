@@ -1,3 +1,10 @@
+## [1.1.5](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.4...v1.1.5) (2020-06-26)
+
+
+### Bug Fixes
+
+* **consumer:** respect returned nextSequenceToken value ([5b395db](https://github.com/mooyoul/cloudwatch-logs-actions/commit/5b395db4ad1f0f5344119f2ea5d4036ef238c7ce))
+
 ## [1.1.4](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.3...v1.1.4) (2020-06-26)
 
 

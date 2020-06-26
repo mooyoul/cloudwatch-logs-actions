@@ -20815,12 +20815,14 @@ class CloudWatchLogsConsumer {
             await this.sema.acquire();
             try {
                 await this.prepareStream();
-                await this.cwlogs.putLogEvents({
+                const res = await this.cwlogs.putLogEvents({
                     logGroupName: this.group,
                     logStreamName: this.stream,
                     logEvents: events,
+                    sequenceToken: this.sequenceToken,
                 }).promise();
                 this.flushedAt = Date.now();
+                this.sequenceToken = res.nextSequenceToken;
             }
             finally {
                 this.sema.release();
