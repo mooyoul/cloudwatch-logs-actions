@@ -20793,26 +20793,26 @@ class CloudWatchLogsConsumer {
     }
     async consume(line) {
         this.queue(line);
-        if (this.shouldFlush()) {
-            await this.flush();
-        }
+        await this.flush();
     }
     async flush() {
-        const events = this.buffer;
-        this.buffer = [];
-        this.bufferSize = 0;
-        await this.sema.acquire();
-        try {
-            await this.prepareStream();
-            await this.cwlogs.putLogEvents({
-                logGroupName: this.group,
-                logStreamName: this.stream,
-                logEvents: events,
-            }).promise();
-            this.flushedAt = Date.now();
-        }
-        finally {
-            this.sema.release();
+        if (this.flushable) {
+            const events = this.buffer;
+            this.buffer = [];
+            this.bufferSize = 0;
+            await this.sema.acquire();
+            try {
+                await this.prepareStream();
+                await this.cwlogs.putLogEvents({
+                    logGroupName: this.group,
+                    logStreamName: this.stream,
+                    logEvents: events,
+                }).promise();
+                this.flushedAt = Date.now();
+            }
+            finally {
+                this.sema.release();
+            }
         }
     }
     async prepareStream() {
@@ -20841,7 +20841,7 @@ class CloudWatchLogsConsumer {
                 .catch((e) => e.name === "ResourceAlreadyExistsException" ? Promise.resolve() : Promise.reject(e));
         }
     }
-    shouldFlush() {
+    get flushable() {
         if (this.buffer.length > 0) {
             if (this.buffer.length > MAX_RECORDS) {
                 return true;

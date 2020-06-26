@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.1.0...v1.1.1) (2020-06-26)
+
+
+### Bug Fixes
+
+* **flush:** fix empty log events flush attempts ([e4d3d73](https://github.com/mooyoul/cloudwatch-logs-actions/commit/e4d3d737223e5e9d257bf99c778ffc87d13203e2))
+
 # [1.1.0](https://github.com/mooyoul/cloudwatch-logs-actions/compare/v1.0.1...v1.1.0) (2020-06-26)
 
 
