@@ -34,7 +34,7 @@ describe("cloudwatch-logs-actions", () => {
     expect(createLogStreamFake.callCount).toEqual(0);
     expect(putLogEventsFake.callCount).toEqual(0);
 
-    fakeTimer.tick(1000);
+    fakeTimer.tick(60000);
 
     await res.flush();
     expect(createLogGroupFake.callCount).toEqual(1);
@@ -63,9 +63,18 @@ describe("cloudwatch-logs-actions", () => {
       }],
     }]);
 
+    await res.flush();
+    await res.flush();
+    await res.flush();
+
+    expect(createLogGroupFake.callCount).toEqual(1);
+    expect(putRetentionPolicyFake.callCount).toEqual(1);
+    expect(createLogStreamFake.callCount).toEqual(1);
+    expect(putLogEventsFake.callCount).toEqual(1);
+
     await res.consume("bar");
 
-    fakeTimer.tick(1000);
+    fakeTimer.tick(60000);
 
     await res.consume("baz");
 
@@ -81,10 +90,10 @@ describe("cloudwatch-logs-actions", () => {
       logStreamName: "stream-name",
       logEvents: [{
         message: "bar",
-        timestamp: 2000,
+        timestamp: 61000,
       }, {
         message: "baz",
-        timestamp: 3000,
+        timestamp: 121000,
       }],
     }]);
   });
