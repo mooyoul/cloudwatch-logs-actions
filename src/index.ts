@@ -34,20 +34,26 @@ type Shell = {
     retentionInDays,
   });
 
-  await exec(shell.program, shell.args, {
-    input: Buffer.from(run, "utf8"),
-    silent: true,
-    listeners: {
-      stdline(line: string) {
-        consumer.consume(line).catch(() => { /* swallow error */ });
+  try {
+    await exec(shell.program, shell.args, {
+      input: Buffer.from(run, "utf8"),
+      silent: true,
+      listeners: {
+        stdline(line: string) {
+          consumer.consume(line).catch(() => { /* swallow error */ });
+        },
+        errline(line: string) {
+          consumer.consume(line).catch(() => { /* swallow error */ });
+        },
       },
-      errline(line: string) {
-        consumer.consume(line).catch(() => { /* swallow error */ });
-      },
-    },
-  });
-
-  await consumer.flush();
+    });
+  } finally {
+    await consumer.flush()
+      .catch((e) => {
+        // tslint:disable-next-line
+        console.error("Failed to flush: ", e.stack);
+      });
+  }
 })().catch((e) => {
   console.error(e.stack); // tslint:disable-line
   core.setFailed(e.message);
