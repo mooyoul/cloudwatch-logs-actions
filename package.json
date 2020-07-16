@@ -45,7 +45,7 @@
     "ts-jest": "26.1.2",
     "ts-node": "8.10.2",
     "tslint": "6.1.2",
-    "typescript": "3.9.6"
+    "typescript": "3.9.7"
   },
   "dependencies": {
     "@actions/core": "^1.1.1",
