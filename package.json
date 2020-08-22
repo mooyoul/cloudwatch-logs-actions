@@ -39,7 +39,7 @@
     "@types/sinon": "9.0.5",
     "@zeit/ncc": "0.22.3",
     "husky": "4.2.5",
-    "jest": "26.4.1",
+    "jest": "26.4.2",
     "semantic-release": "17.1.1",
     "sinon": "9.0.3",
     "ts-jest": "26.2.0",
