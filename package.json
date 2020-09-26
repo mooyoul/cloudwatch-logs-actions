@@ -36,7 +36,7 @@
     "@types/chai": "4.2.12",
     "@types/jest": "26.0.14",
     "@types/node": "12.12.62",
-    "@types/sinon": "9.0.5",
+    "@types/sinon": "9.0.6",
     "@zeit/ncc": "0.22.3",
     "husky": "4.3.0",
     "jest": "26.4.2",
