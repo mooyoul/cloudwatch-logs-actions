@@ -41,7 +41,7 @@
     "husky": "7.0.1",
     "jest": "27.0.6",
     "semantic-release": "17.4.4",
-    "sinon": "11.1.1",
+    "sinon": "11.1.2",
     "ts-jest": "27.0.4",
     "ts-node": "10.1.0",
     "tslint": "6.1.3",
