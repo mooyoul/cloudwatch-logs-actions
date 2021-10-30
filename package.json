@@ -28,10 +28,10 @@
   "devDependencies": {
     "@prescott/commitlint-preset": "1.0.3",
     "@prescott/tslint-preset": "1.0.1",
-    "@semantic-release/changelog": "6.0.0",
+    "@semantic-release/changelog": "6.0.1",
     "@semantic-release/commit-analyzer": "9.0.1",
-    "@semantic-release/exec": "6.0.1",
-    "@semantic-release/git": "10.0.0",
+    "@semantic-release/exec": "6.0.2",
+    "@semantic-release/git": "10.0.1",
     "@semantic-release/release-notes-generator": "10.0.2",
     "@types/chai": "4.2.22",
     "@types/jest": "27.0.2",
