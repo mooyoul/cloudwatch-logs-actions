@@ -34,7 +34,7 @@
     "@semantic-release/git": "10.0.1",
     "@semantic-release/release-notes-generator": "10.0.2",
     "@types/chai": "4.2.22",
-    "@types/jest": "27.0.2",
+    "@types/jest": "27.0.3",
     "@types/node": "16.11.7",
     "@types/sinon": "10.0.6",
     "@zeit/ncc": "0.22.3",
