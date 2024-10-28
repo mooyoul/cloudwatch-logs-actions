@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   job:
     runs-on: ubuntu-latest
-    container: node:12
+    container: node:20
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v1
