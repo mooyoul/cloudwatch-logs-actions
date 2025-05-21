@@ -35,7 +35,7 @@
     "@semantic-release/release-notes-generator": "10.0.3",
     "@types/chai": "5.2.2",
     "@types/jest": "28.1.8",
-    "@types/node": "22.15.20",
+    "@types/node": "22.15.21",
     "@types/sinon": "17.0.4",
     "@zeit/ncc": "0.22.3",
     "husky": "9.1.7",
